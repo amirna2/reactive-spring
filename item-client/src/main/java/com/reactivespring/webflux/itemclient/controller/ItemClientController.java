@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 @RestController
 public class ItemClientController {
 
-    WebClient webClient = WebClient.create("http://localhost.8080");
+    WebClient webClient = WebClient.create("http://localhost:8080");
     
     @GetMapping("/client/retrieve")
     public Flux<Item> getAllItemsUsingRetrieve() {
