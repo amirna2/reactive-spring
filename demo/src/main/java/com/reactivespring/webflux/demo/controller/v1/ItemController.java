@@ -46,27 +46,27 @@ public class ItemController {
         return repository.save(item);
     }
 
-/*    
+    
     @DeleteMapping(V1_ITEMS_ENDPOINT+"/{id}")
     public Mono<Void> deleteItem(@PathVariable String id) {
         return repository.deleteById(id);
     }
-*/
     
+/*    
     @DeleteMapping(V1_ITEMS_ENDPOINT+"/{id}")
     public Mono<ResponseEntity<Void>> deleteItem(@PathVariable String id) {
         if (id == null) {
             return Mono.just(new ResponseEntity<Void>(HttpStatus.METHOD_NOT_ALLOWED));
         }
        
-        return repository.findById(id)
+        return repository.findById(id).log("Delete:")
                 .flatMap(currentItem -> { 
-                    repository.delete(currentItem);
+                    repository.delete(currentItem).log("repository:delete");
                     return Mono.just(new ResponseEntity<Void>(HttpStatus.OK));
                 })
                 .defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));          
     }
-    
+*/    
     @PutMapping(V1_ITEMS_ENDPOINT+"/{id}")
     public Mono<ResponseEntity<Item>> updateItem(@PathVariable String id, @RequestBody Item item) {
         return repository.findById(id)
