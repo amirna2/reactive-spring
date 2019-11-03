@@ -1,7 +1,9 @@
-package com.reactivespring.webflux.demo.controller.v1;
+package com.reactivespring.webflux.demo.handler;
 
 
 import java.time.Duration;
+
+import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.reactivespring.webflux.demo.controller.v1.ItemStreamController;
 import com.reactivespring.webflux.demo.document.ItemCapped;
 import com.reactivespring.webflux.demo.repository.ItemReactiveCappedRepository;
 
@@ -29,7 +32,7 @@ import reactor.test.StepVerifier;
 @DirtiesContext
 @ActiveProfiles("test")
 @Slf4j
-public class ItemStreamControllerTest {
+public class ItemStreamsHandlerTest {
 
     @Autowired
     WebTestClient webTestClient;
@@ -66,7 +69,7 @@ public class ItemStreamControllerTest {
     
     @Test
     public void testStreamAllItems() {
-    	Flux<ItemCapped> items = webTestClient.get().uri(ItemStreamController.V1_STREAM_ITEMS_ENDPOINT)
+    	Flux<ItemCapped> items = webTestClient.get().uri(ItemsHandler.V1_STREAM_ITEMS_FUNCTIONAL_ENDPOINT)
     			.exchange()
     			.expectStatus().isOk()
     			.returnResult(ItemCapped.class)
