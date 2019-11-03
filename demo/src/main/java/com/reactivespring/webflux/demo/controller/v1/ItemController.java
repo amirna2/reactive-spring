@@ -1,9 +1,12 @@
 package com.reactivespring.webflux.demo.controller.v1;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +30,7 @@ public class ItemController {
 
     @Autowired
     ItemReactiveRepository repository;
-    
+        
     @GetMapping(V1_ITEMS_ENDPOINT)
     public Flux<Item> getAllItems() {
         return repository.findAll();
@@ -77,6 +80,20 @@ public class ItemController {
             })
             .map(updatedItem -> new ResponseEntity<>(item, HttpStatus.OK))
             .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    @GetMapping(V1_ITEMS_ENDPOINT + "/runtimeException")
+    public Flux<Item> runtimeException() {
+    	return repository.findAll()
+    			.concatWith(Mono.error(new RuntimeException("RuntimeException Test")));
+    	
+    }
+    
+    @GetMapping(V1_ITEMS_ENDPOINT + "/ioException")
+    public Flux<Item> ioException() {
+    	return repository.findAll()
+    			.concatWith(Mono.error(new IOException("IOException Test")));
+    	
     }
 }
 

@@ -191,4 +191,22 @@ public class ItemControllerTest {
             .expectStatus().isNotFound();       
     }
     
+    @Test
+    public void RuntimeException() {
+    	webTestClient.get()
+        .uri(ItemController.V1_ITEMS_ENDPOINT.concat("/runtimeException"))
+        .exchange()
+        .expectStatus().is5xxServerError()
+        .expectBody(String.class)
+        .isEqualTo("RuntimeException Test"); 
+    }
+    @Test
+    public void IOException() {
+    	webTestClient.get()
+        .uri(ItemController.V1_ITEMS_ENDPOINT.concat("/ioException"))
+        .exchange()
+        .expectStatus().is5xxServerError()
+        .expectBody(String.class)
+        .isEqualTo("IOException Test"); 
+    }
 }

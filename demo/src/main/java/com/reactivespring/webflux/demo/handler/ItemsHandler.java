@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.reactivespring.webflux.demo.document.Item;
+import com.reactivespring.webflux.demo.document.ItemCapped;
+import com.reactivespring.webflux.demo.repository.ItemReactiveCappedRepository;
 import com.reactivespring.webflux.demo.repository.ItemReactiveRepository;
 
 import reactor.core.publisher.Mono;
@@ -17,12 +19,21 @@ import reactor.core.publisher.Mono;
 public class ItemsHandler {
 
     public static final String V1_ITEMS_FUNCTIONAL_ENDPOINT = "/v1/functional/items";
+    public static final String V1_ERRORS_FUNCTIONAL_ENDPOINT = "/v1/functional/errors";
+    public static final String V1_STREAM_ITEMS_FUNCTIONAL_ENDPOINT = "/v1/functional/stream/items";
+    
 
     static final Mono<ServerResponse> notFound = ServerResponse.notFound().build();
 
     @Autowired
     ItemReactiveRepository repository;
-
+    
+    @Autowired
+    ItemReactiveRepository itemReactiveRepository;
+    
+    @Autowired
+    ItemReactiveCappedRepository itemReactiveCappedRepository;
+    
     public Mono<ServerResponse> getAllItems(ServerRequest request) {
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(repository.findAll(), Item.class);
     }
@@ -75,8 +86,15 @@ public class ItemsHandler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(fromObject(item)))
                 .switchIfEmpty(notFound);
-
-
     }
 
+    public Mono<ServerResponse> runtimeException(ServerRequest request) {
+    	throw new RuntimeException("RuntimeException test");
+    }
+    
+    public Mono<ServerResponse> itemsStream(ServerRequest reuest) {
+    	return ServerResponse.ok()
+    			.contentType(MediaType.APPLICATION_STREAM_JSON)
+    			.body(itemReactiveCappedRepository.findItemsBy(), ItemCapped.class);
+    }
 }

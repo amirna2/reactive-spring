@@ -179,4 +179,14 @@ public class ItemHandlerTest {
             .exchange()
             .expectStatus().isNotFound();       
     }
+    
+    @Test
+    public void runtimeException() {
+        webTestClient.get()
+            .uri(ItemsHandler.V1_ERRORS_FUNCTIONAL_ENDPOINT.concat("/runtimeException"))
+            .exchange()
+            .expectStatus().is5xxServerError()
+            .expectBody()
+            .jsonPath("$.foo", "RuntimeException test");
+    }
 }

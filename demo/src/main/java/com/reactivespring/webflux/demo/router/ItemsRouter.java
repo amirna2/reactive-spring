@@ -23,16 +23,33 @@ public class ItemsRouter {
         RouterFunction<ServerResponse> rf = RouterFunctions
                 .route(GET(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT).and(accept(MediaType.APPLICATION_JSON))
                 ,itemsHandler::getAllItems)
-                .andRoute(GET(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT+"/{id}").and(accept(MediaType.APPLICATION_JSON))
+                .andRoute(GET(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT + "/{id}").and(accept(MediaType.APPLICATION_JSON))
                 ,itemsHandler::getOneItem)
                 .andRoute(POST(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT).and(accept(MediaType.APPLICATION_JSON))
                 ,itemsHandler::createItem)
-                .andRoute(DELETE(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT+"/{id}").and(accept(MediaType.APPLICATION_JSON))
+                .andRoute(DELETE(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT + "/{id}").and(accept(MediaType.APPLICATION_JSON))
                 ,itemsHandler::deleteItem)
-                .andRoute(PUT(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT+"/{id}").and(accept(MediaType.APPLICATION_JSON))
+                .andRoute(PUT(ItemsHandler.V1_ITEMS_FUNCTIONAL_ENDPOINT + "/{id}").and(accept(MediaType.APPLICATION_JSON))
                 ,itemsHandler::updateItem);
         
         return rf;
     }
+ 
+    @Bean
+    public RouterFunction<ServerResponse> errorsRoute(ItemsHandler itemsHandler){
+        RouterFunction<ServerResponse> rf = RouterFunctions
+                .route(GET(ItemsHandler.V1_ERRORS_FUNCTIONAL_ENDPOINT + "/runtimeException" ).and(accept(MediaType.APPLICATION_JSON))
+                ,itemsHandler::runtimeException);
+        
+        return rf;
+    }
     
+    @Bean
+    public RouterFunction<ServerResponse> itemStreamRoute(ItemsHandler itemsHandler){
+        RouterFunction<ServerResponse> rf = RouterFunctions
+                .route(GET(ItemsHandler.V1_STREAM_ITEMS_FUNCTIONAL_ENDPOINT).and(accept(MediaType.APPLICATION_JSON))
+                ,itemsHandler::itemsStream);
+        
+        return rf;
+    }
 }
